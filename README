@@ -1,0 +1,6 @@
+Convert spaces to tabs
+
+
+1) Get this : git clone git://github.com/progman/tabfix
+2) Use this : tabfix source_file
+3) Enjoy!
