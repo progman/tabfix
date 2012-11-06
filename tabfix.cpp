@@ -146,8 +146,8 @@ int do_it(const char *filename)
 	rc = rename(filename, new_filename);
 	if (rc == -1)
 	{
-		printf ("ERROR[rename()]: %s\n", strerror(errno));
 		free(new_filename);
+		printf ("ERROR[rename()]: %s\n", strerror(errno));
 		return -1;
 	}
 
@@ -156,15 +156,11 @@ int do_it(const char *filename)
 	rc = open(new_filename, O_RDONLY);
 	if (rc == -1)
 	{
-		printf ("ERROR[open()]: %s\n", strerror(errno));
 		free(new_filename);
+		printf ("ERROR[open()]: %s\n", strerror(errno));
 		return -1;
 	}
 	int fd = rc;
-
-
-// free backup filename
-	free(new_filename);
 
 
 // get file size
@@ -172,8 +168,9 @@ int do_it(const char *filename)
 	rc = fstat(fd, &my_stat);
 	if (rc == -1)
 	{
-		printf ("ERROR[fstat()]: %s\n", strerror(errno));
 		close(fd);
+		free(new_filename);
+		printf ("ERROR[fstat()]: %s\n", strerror(errno));
 		return -1;
 	}
 	size_t size = my_stat.st_size;
@@ -183,8 +180,9 @@ int do_it(const char *filename)
 	void *pmmap = mmap(NULL, size, PROT_READ, MAP_PRIVATE, fd, 0);
 	if (pmmap == MAP_FAILED)
 	{
-		printf ("ERROR[mmap()]: %s\n", strerror(errno));
 		close(fd);
+		free(new_filename);
+		printf ("ERROR[mmap()]: %s\n", strerror(errno));
 		return -1;
 	}
 
@@ -195,6 +193,7 @@ int do_it(const char *filename)
 	{
 		munmap(pmmap, size);
 		close(fd);
+		free(new_filename);
 		return -1;
 	}
 
@@ -203,8 +202,9 @@ int do_it(const char *filename)
 	rc = munmap(pmmap, size);
 	if (rc == -1)
 	{
-		printf ("ERROR[munmap()]: %s\n", strerror(errno));
 		close(fd);
+		free(new_filename);
+		printf ("ERROR[munmap()]: %s\n", strerror(errno));
 		return -1;
 	}
 
@@ -213,9 +213,14 @@ int do_it(const char *filename)
 	rc = close(fd);
 	if (rc == -1)
 	{
+		free(new_filename);
 		printf ("ERROR[close()]: %s\n", strerror(errno));
 		return -1;
 	}
+
+
+// free backup filename
+	free(new_filename);
 
 
 	return 0;
