@@ -12,6 +12,12 @@
 #include <unistd.h>
 #include <sys/mman.h>
 //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------//
+// global vars
+namespace global
+{
+	bool flag_kill_backup = false;
+}
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------//
 // convert space to tab
 int tabfix(const char *filename, const char* p, size_t size)
 {
@@ -134,8 +140,8 @@ int do_it(const char *filename)
 
 
 // create backup filename
-	char* new_filename = concat_str(filename, ".bak");
-	if (new_filename == NULL)
+	char* backup_filename = concat_str(filename, ".bak");
+	if (backup_filename == NULL)
 	{
 		printf ("ERROR[concat_str()]: %s\n", strerror(errno));
 		return -1;
@@ -143,20 +149,20 @@ int do_it(const char *filename)
 
 
 // create backup original file
-	rc = rename(filename, new_filename);
+	rc = rename(filename, backup_filename);
 	if (rc == -1)
 	{
-		free(new_filename);
+		free(backup_filename);
 		printf ("ERROR[rename()]: %s\n", strerror(errno));
 		return -1;
 	}
 
 
 // open file
-	rc = open(new_filename, O_RDONLY);
+	rc = open(backup_filename, O_RDONLY);
 	if (rc == -1)
 	{
-		free(new_filename);
+		free(backup_filename);
 		printf ("ERROR[open()]: %s\n", strerror(errno));
 		return -1;
 	}
@@ -169,7 +175,7 @@ int do_it(const char *filename)
 	if (rc == -1)
 	{
 		close(fd);
-		free(new_filename);
+		free(backup_filename);
 		printf ("ERROR[fstat()]: %s\n", strerror(errno));
 		return -1;
 	}
@@ -181,7 +187,7 @@ int do_it(const char *filename)
 	if (pmmap == MAP_FAILED)
 	{
 		close(fd);
-		free(new_filename);
+		free(backup_filename);
 		printf ("ERROR[mmap()]: %s\n", strerror(errno));
 		return -1;
 	}
@@ -193,7 +199,7 @@ int do_it(const char *filename)
 	{
 		munmap(pmmap, size);
 		close(fd);
-		free(new_filename);
+		free(backup_filename);
 		return -1;
 	}
 
@@ -203,7 +209,7 @@ int do_it(const char *filename)
 	if (rc == -1)
 	{
 		close(fd);
-		free(new_filename);
+		free(backup_filename);
 		printf ("ERROR[munmap()]: %s\n", strerror(errno));
 		return -1;
 	}
@@ -213,14 +219,27 @@ int do_it(const char *filename)
 	rc = close(fd);
 	if (rc == -1)
 	{
-		free(new_filename);
+		free(backup_filename);
 		printf ("ERROR[close()]: %s\n", strerror(errno));
 		return -1;
 	}
 
 
+	if (global::flag_kill_backup == true)
+	{
+// kill backup
+		rc = unlink(backup_filename);
+		if (rc == -1)
+		{
+			free(backup_filename);
+			printf ("ERROR[unlink()]: %s\n", strerror(errno));
+			return -1;
+		}
+	}
+
+
 // free backup filename
-	free(new_filename);
+	free(backup_filename);
 
 
 	return 0;
