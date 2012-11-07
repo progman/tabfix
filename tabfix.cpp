@@ -18,6 +18,7 @@
 namespace global
 {
 	bool flag_kill_backup = false;
+	bool flag_sync        = false;
 	bool flag_debug       = false;
 }
 //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------//
@@ -220,15 +221,18 @@ int do_file(const char *filename)
 
 
 // flush file
-	rc = fflush(fh);
-	if (rc != 0)
+	if (global::flag_sync == true)
 	{
-		fclose(fh);
-		munmap(pmmap, size);
-		close(fd);
-		free(backup_filename);
-		printf ("ERROR[fflush()]: %s\n", strerror(errno));
-		return -1;
+		rc = fflush(fh);
+		if (rc != 0)
+		{
+			fclose(fh);
+			munmap(pmmap, size);
+			close(fd);
+			free(backup_filename);
+			printf ("ERROR[fflush()]: %s\n", strerror(errno));
+			return -1;
+		}
 	}
 
 
@@ -306,17 +310,12 @@ int do_stdinput()
 	}
 
 
-	size_t size   = 4096;
+	size_t size   = 0;
 	size_t delta  = 4096;
 	size_t offset = 0;
 
 
-	void *p_original = malloc(size);
-	if (p_original == NULL)
-	{
-		printf ("ERROR[malloc()]: %s\n", strerror(errno));
-		return -1;
-	}
+	void *p_original = NULL;
 	char *p = (char*)p_original;
 
 
@@ -352,7 +351,10 @@ int do_stdinput()
 
 
 // flush stdout
-	fflush(stdout);
+	if (global::flag_sync == true)
+	{
+		fflush(stdout);
+	}
 
 
 // free memory
@@ -366,7 +368,15 @@ int do_stdinput()
 void help()
 {
 	printf ("%s\t(%s)\n", PROG_FULL_NAME, PROG_URL);
-	printf ("example: %s source_file\n", PROG_NAME);
+	printf ("example: %s [-kb, --] source_file\n", PROG_NAME);
+	printf ("\n");
+
+	printf ("Convert spaces to tabs in FILE(s), or standard input, to file(s)\n");
+	printf ("\n");
+	printf ("  -h, -help, --help                this message\n");
+	printf ("  -s, --flag_sync=true|false       sync write\n");
+	printf ("  -kb                              kill backup file\n");
+	printf ("With no FILE, or when FILE is -, read standard input.\n");
 }
 //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------//
 // general function
@@ -398,6 +408,21 @@ int main(int argc, char* argv[])
 		if (key == "-kb")
 		{
 			global::flag_kill_backup = true;
+			continue;
+		}
+
+
+		tmpl = "--flag_sync=";
+		if ((key.size() >= tmpl.size()) && (key.substr(0, tmpl.size()) == tmpl))
+		{
+			value = key.substr(tmpl.size(), key.size() - 1);
+			global::flag_sync = str2bool(value);
+			continue;
+		}
+
+		if (key == "-s")
+		{
+			global::flag_sync = true;
 			continue;
 		}
 
