@@ -380,6 +380,35 @@ void help()
 	printf ("With no FILE, or when FILE is -, read standard input.\n");
 }
 //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------//
+// split string use token to std::list
+size_t tokenize2list(const std::string& s, const std::string& token, std::list<std::string>& out, bool exclude_tail)
+{
+	out.clear();
+	size_t size = 0;
+	size_t index1 = 0;
+
+	while(index1 < s.size())
+	{
+		size_t index2 = s.find (token, index1);
+		if (index2 == size_t(-1))
+		{
+			if (exclude_tail != false) return size;
+
+			index2 = s.size();
+		}
+
+		std::string tmp = s.substr(index1, index2 - index1);
+		if (tmp.empty() == false)
+		{
+			out.push_back(tmp);
+			size++;
+		}
+		index1 = index2 + token.size();
+	}
+
+	return size;
+}
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------//
 // get all program arguments
 int get_args(int argc, char** argv, std::list<std::string>& args, const char* name)
 {
@@ -390,8 +419,14 @@ int get_args(int argc, char** argv, std::list<std::string>& args, const char* na
 	char *p = getenv(name);
 	if (p != NULL)
 	{
-		args.push_back(p); //TODO: split string
-		count++;
+		std::list<std::string> out;
+		size_t size = tokenize2list(p, " ", out, false);
+		for (size_t i=0; i < size; i++)
+		{
+			args.push_back(out.front());
+			out.pop_front();
+			count++;
+		}
 	}
 
 
@@ -420,6 +455,7 @@ int main(int argc, char* argv[])
 	{
 		std::string key = args.front();
 		args.pop_front();
+
 		std::string tmpl;
 		std::string value;
 
