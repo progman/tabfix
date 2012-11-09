@@ -443,7 +443,7 @@ int get_args(int argc, char** argv, std::list<std::string>& args, const char* na
 // general function
 int main(int argc, char* argv[])
 {
-	int rc;
+	int rc = 0;
 	bool flag_file = false;
 
 
