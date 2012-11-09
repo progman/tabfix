@@ -37,6 +37,8 @@ int tabfix(FILE *fh, const char* p, size_t size)
 		{
 			flag_head_char = false;
 
+
+// skip '//' in head line
 			if
 			(
 				(p[offset + 0] == '/') &&
@@ -51,6 +53,21 @@ int tabfix(FILE *fh, const char* p, size_t size)
 		}
 
 
+// convert '<-->' to '\t' (for mcedit)
+		if
+		(
+			(p[offset + 0] == '<') &&
+			((offset + 1) != size) && (p[offset + 1] == '-') &&
+			((offset + 2) != size) && (p[offset + 2] == '-') &&
+			((offset + 3) != size) && (p[offset + 3] == '>')
+		)
+		{
+			fprintf (fh, "%c", '\t');
+			offset += 4;
+			continue;
+		}
+
+
 		if ((p[offset + 0] != ' ') && (p[offset + 0] != '\t'))
 		{
 			flag_head_line = false;
@@ -59,6 +76,7 @@ int tabfix(FILE *fh, const char* p, size_t size)
 
 		if (flag_head_line == true)
 		{
+// convert '    ' to '\t'
 			if
 			(
 				(p[offset + 0] == ' ') &&
