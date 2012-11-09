@@ -10,6 +10,7 @@
 #include <errno.h>
 #include <string.h>
 #include <string>
+#include <list>
 #include <unistd.h>
 #include <sys/mman.h>
 #include <algorithm>
@@ -379,6 +380,31 @@ void help()
 	printf ("With no FILE, or when FILE is -, read standard input.\n");
 }
 //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------//
+// get all program arguments
+int get_args(int argc, char** argv, std::list<std::string>& args, const char* name)
+{
+	size_t count = 0;
+	args.clear();
+
+
+	char *p = getenv(name);
+	if (p != NULL)
+	{
+		args.push_back(p); //TODO: split string
+		count++;
+	}
+
+
+	for (int i=1; i < argc; i++)
+	{
+		args.push_back(argv[i]);
+		count++;
+	}
+
+
+	return count;
+}
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------//
 // general function
 int main(int argc, char* argv[])
 {
@@ -386,9 +412,14 @@ int main(int argc, char* argv[])
 	bool flag_file = false;
 
 
-	for(int i=1; i < argc; i++)
+	std::list<std::string> args;
+	int args_size = get_args(argc, argv, args, "TABFIX");
+
+
+	for(int i=0; i < args_size; i++)
 	{
-		std::string key = argv[i];
+		std::string key = args.front();
+		args.pop_front();
 		std::string tmpl;
 		std::string value;
 
