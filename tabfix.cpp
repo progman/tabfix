@@ -305,6 +305,15 @@ int do_file(const char *filename)
 	free(backup_filename);
 
 
+// set old permission bits for new file
+	rc = chmod(filename, my_stat.st_mode);
+	if (rc == -1)
+	{
+		printf ("ERROR[chmod()]: %s\n", strerror(errno));
+		return -1;
+	}
+
+
 	return 0;
 }
 //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------//
