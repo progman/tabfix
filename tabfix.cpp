@@ -1,5 +1,5 @@
 //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------//
-// 0.0.4
+// 0.0.5
 // Alexey Potehin http://www.gnuplanet.ru/doc/cv
 //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------//
 #include <stdio.h>
@@ -29,35 +29,29 @@ namespace global
 int tabfix(FILE *fh, const char* p, size_t size)
 {
 	size_t offset = 0;
-	bool flag_head_char = true;
 	bool flag_head_line = true;
 
 
 	while (offset != size)
 	{
-		if (flag_head_char == true)
+		if (global::flag_comment == true)
 		{
-			flag_head_char = false;
-
-			if (global::flag_comment == true)
-			{
 // skip '//' in head line
-				if
-				(
-					(p[offset + 0] == '/') &&
-					((offset + 1) != size) && (p[offset + 1] == '/')
-				)
-				{
-					fprintf (fh, "%c", '/');
-					fprintf (fh, "%c", '/');
-					offset += 2;
-					continue;
-				}
+			if
+			(
+				(p[offset + 0] == '/') &&
+				((offset + 1) != size) && (p[offset + 1] == '/')
+			)
+			{
+				fprintf (fh, "%c", '/');
+				fprintf (fh, "%c", '/');
+				offset += 2;
+				continue;
 			}
 		}
 
 
-		if (global::flag_mcbug == true)
+		if ((flag_head_line == true) && (global::flag_mcbug == true))
 		{
 
 //<><-->comment
@@ -145,7 +139,6 @@ int tabfix(FILE *fh, const char* p, size_t size)
 		if (p[offset + 0] == '\n')
 		{
 			flag_head_line = true;
-			flag_head_char = true;
 		}
 
 
