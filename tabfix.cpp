@@ -1,5 +1,5 @@
 //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------//
-// 0.0.3
+// 0.0.4
 // Alexey Potehin http://www.gnuplanet.ru/doc/cv
 //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------//
 #include <stdio.h>
@@ -21,6 +21,8 @@ namespace global
 	bool flag_kill_backup = false;
 	bool flag_sync        = false;
 	bool flag_debug       = false;
+	bool flag_comment     = false;
+	bool flag_mcbug       = false;
 }
 //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------//
 // convert space to tab
@@ -37,35 +39,83 @@ int tabfix(FILE *fh, const char* p, size_t size)
 		{
 			flag_head_char = false;
 
-
-// skip '//' in head line
-			if
-			(
-				(p[offset + 0] == '/') &&
-				((offset + 1) != size) && (p[offset + 1] == '/')
-			)
+			if (global::flag_comment == true)
 			{
-				fprintf (fh, "%c", '/');
-				fprintf (fh, "%c", '/');
-				offset += 2;
-				continue;
+// skip '//' in head line
+				if
+				(
+					(p[offset + 0] == '/') &&
+					((offset + 1) != size) && (p[offset + 1] == '/')
+				)
+				{
+					fprintf (fh, "%c", '/');
+					fprintf (fh, "%c", '/');
+					offset += 2;
+					continue;
+				}
 			}
 		}
 
 
-// convert '<-->' to '\t' (for mcedit)
-		if
-		(
-			(p[offset + 0] == '<') &&
-			((offset + 1) != size) && (p[offset + 1] == '-') &&
-			((offset + 2) != size) && (p[offset + 2] == '-') &&
-			((offset + 3) != size) && (p[offset + 3] == '>')
-		)
+		if (global::flag_mcbug == true)
 		{
-			fprintf (fh, "%c", '\t');
-			offset += 4;
-			continue;
+
+//<><-->comment
+ //><-->comment
+  //<--><-->comment
+   //<-><-->comment
+
+// convert '<-->' to '\t' (for mcedit)
+			if
+			(
+				(p[offset + 0] == '<') &&
+				((offset + 1) != size) && (p[offset + 1] == '-') &&
+				((offset + 2) != size) && (p[offset + 2] == '-') &&
+				((offset + 3) != size) && (p[offset + 3] == '>')
+			)
+			{
+				fprintf (fh, "%c", '\t');
+				offset += 4;
+				continue;
+			}
+
+// convert '<->' to '\t' (for mcedit)
+			if
+			(
+				(p[offset + 0] == '<') &&
+				((offset + 1) != size) && (p[offset + 1] == '-') &&
+				((offset + 2) != size) && (p[offset + 2] == '>')
+			)
+			{
+				fprintf (fh, "%c", '\t');
+				offset += 3;
+				continue;
+			}
+
+// convert '<>' to '\t' (for mcedit)
+			if
+			(
+				(p[offset + 0] == '<') &&
+				((offset + 1) != size) && (p[offset + 1] == '>')
+			)
+			{
+				fprintf (fh, "%c", '\t');
+				offset += 2;
+				continue;
+			}
+
+// convert '>' to '\t' (for mcedit)
+			if
+			(
+				(p[offset + 0] == '>')
+			)
+			{
+				fprintf (fh, "%c", '\t');
+				offset += 1;
+				continue;
+			}
 		}
+
 
 
 		if ((p[offset + 0] != ' ') && (p[offset + 0] != '\t'))
@@ -403,6 +453,8 @@ void help()
 	printf ("\n");
 	printf ("  -h, -help, --help                this message\n");
 	printf ("  -s, --flag_sync=true|false       sync write\n");
+	printf ("  -c, --flag_comment=true|false    convert head comment\n");
+	printf ("  -m, --flag_mcbug=true|false      convert mcbug\n");
 	printf ("  -kb                              kill backup file\n");
 	printf ("With no FILE, or when FILE is -, read standard input.\n");
 }
@@ -529,10 +581,41 @@ int main(int argc, char* argv[])
 			continue;
 		}
 
-
 		if (key == "-d")
 		{
 			global::flag_debug = true;
+			continue;
+		}
+
+
+		tmpl = "--flag_comment=";
+		if ((key.size() >= tmpl.size()) && (key.substr(0, tmpl.size()) == tmpl))
+		{
+			value = key.substr(tmpl.size(), key.size() - 1);
+			global::flag_comment = str2bool(value);
+			continue;
+		}
+
+		if (key == "-c")
+		{
+			global::flag_comment = true;
+			continue;
+		}
+
+
+		tmpl = "--flag_mcbug=";
+		if ((key.size() >= tmpl.size()) && (key.substr(0, tmpl.size()) == tmpl))
+		{
+			value = key.substr(tmpl.size(), key.size() - 1);
+			global::flag_mcbug = str2bool(value);
+			if (global::flag_mcbug == true) global::flag_comment = true;
+			continue;
+		}
+
+		if (key == "-m")
+		{
+			global::flag_comment = true;
+			global::flag_mcbug   = true;
 			continue;
 		}
 
