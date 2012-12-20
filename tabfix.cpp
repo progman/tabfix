@@ -43,8 +43,8 @@ int tabfix(FILE *fh, const char* p, size_t size)
 				((offset + 1) != size) && (p[offset + 1] == '/')
 			)
 			{
-				fprintf (fh, "%c", '/');
-				fprintf (fh, "%c", '/');
+				fprintf(fh, "%c", '/');
+				fprintf(fh, "%c", '/');
 				offset += 2;
 				continue;
 			}
@@ -68,7 +68,7 @@ int tabfix(FILE *fh, const char* p, size_t size)
 				((offset + 3) != size) && (p[offset + 3] == '>')
 			)
 			{
-				fprintf (fh, "%c", '\t');
+				fprintf(fh, "%c", '\t');
 				offset += 4;
 				continue;
 			}
@@ -81,7 +81,7 @@ int tabfix(FILE *fh, const char* p, size_t size)
 				((offset + 2) != size) && (p[offset + 2] == '>')
 			)
 			{
-				fprintf (fh, "%c", '\t');
+				fprintf(fh, "%c", '\t');
 				offset += 3;
 				continue;
 			}
@@ -93,7 +93,7 @@ int tabfix(FILE *fh, const char* p, size_t size)
 				((offset + 1) != size) && (p[offset + 1] == '>')
 			)
 			{
-				fprintf (fh, "%c", '\t');
+				fprintf(fh, "%c", '\t');
 				offset += 2;
 				continue;
 			}
@@ -104,7 +104,7 @@ int tabfix(FILE *fh, const char* p, size_t size)
 				(p[offset + 0] == '>')
 			)
 			{
-				fprintf (fh, "%c", '\t');
+				fprintf(fh, "%c", '\t');
 				offset += 1;
 				continue;
 			}
@@ -129,7 +129,7 @@ int tabfix(FILE *fh, const char* p, size_t size)
 				((offset + 3) != size) && (p[offset + 3] == ' ')
 			)
 			{
-				fprintf (fh, "%c", '\t');
+				fprintf(fh, "%c", '\t');
 				offset += 4;
 				continue;
 			}
@@ -142,7 +142,7 @@ int tabfix(FILE *fh, const char* p, size_t size)
 		}
 
 
-		fprintf (fh, "%c", p[offset + 0]);
+		fprintf(fh, "%c", p[offset + 0]);
 		offset++;
 	}
 
@@ -209,7 +209,7 @@ int do_file(const char *filename)
 	char* backup_filename = concat_str(filename, ".bak");
 	if (backup_filename == NULL)
 	{
-		printf ("ERROR[concat_str()]: %s\n", strerror(errno));
+		printf("ERROR[concat_str()]: %s\n", strerror(errno));
 		return -1;
 	}
 
@@ -219,7 +219,7 @@ int do_file(const char *filename)
 	if (rc == -1)
 	{
 		free(backup_filename);
-		printf ("ERROR[rename()]: %s\n", strerror(errno));
+		printf("ERROR[rename()]: %s\n", strerror(errno));
 		return -1;
 	}
 
@@ -229,7 +229,7 @@ int do_file(const char *filename)
 	if (rc == -1)
 	{
 		free(backup_filename);
-		printf ("ERROR[open()]: %s\n", strerror(errno));
+		printf("ERROR[open()]: %s\n", strerror(errno));
 		return -1;
 	}
 	int fd = rc;
@@ -242,7 +242,7 @@ int do_file(const char *filename)
 	{
 		close(fd);
 		free(backup_filename);
-		printf ("ERROR[fstat()]: %s\n", strerror(errno));
+		printf("ERROR[fstat()]: %s\n", strerror(errno));
 		return -1;
 	}
 	size_t size = my_stat.st_size;
@@ -254,7 +254,7 @@ int do_file(const char *filename)
 	{
 		close(fd);
 		free(backup_filename);
-		printf ("ERROR[mmap()]: %s\n", strerror(errno));
+		printf("ERROR[mmap()]: %s\n", strerror(errno));
 		return -1;
 	}
 
@@ -265,7 +265,7 @@ int do_file(const char *filename)
 	{
 		close(fd);
 		free(backup_filename);
-		printf ("ERROR[fopen()]: %s\n", strerror(errno));
+		printf("ERROR[fopen()]: %s\n", strerror(errno));
 		return -1;
 	}
 
@@ -292,7 +292,7 @@ int do_file(const char *filename)
 			munmap(pmmap, size);
 			close(fd);
 			free(backup_filename);
-			printf ("ERROR[fflush()]: %s\n", strerror(errno));
+			printf("ERROR[fflush()]: %s\n", strerror(errno));
 			return -1;
 		}
 	}
@@ -305,7 +305,7 @@ int do_file(const char *filename)
 		munmap(pmmap, size);
 		close(fd);
 		free(backup_filename);
-		printf ("ERROR[fclose()]: %s\n", strerror(errno));
+		printf("ERROR[fclose()]: %s\n", strerror(errno));
 		return -1;
 	}
 
@@ -316,7 +316,7 @@ int do_file(const char *filename)
 	{
 		close(fd);
 		free(backup_filename);
-		printf ("ERROR[munmap()]: %s\n", strerror(errno));
+		printf("ERROR[munmap()]: %s\n", strerror(errno));
 		return -1;
 	}
 
@@ -326,7 +326,7 @@ int do_file(const char *filename)
 	if (rc == -1)
 	{
 		free(backup_filename);
-		printf ("ERROR[close()]: %s\n", strerror(errno));
+		printf("ERROR[close()]: %s\n", strerror(errno));
 		return -1;
 	}
 
@@ -338,7 +338,7 @@ int do_file(const char *filename)
 		if (rc == -1)
 		{
 			free(backup_filename);
-			printf ("ERROR[unlink()]: %s\n", strerror(errno));
+			printf("ERROR[unlink()]: %s\n", strerror(errno));
 			return -1;
 		}
 	}
@@ -352,7 +352,7 @@ int do_file(const char *filename)
 	rc = chmod(filename, my_stat.st_mode);
 	if (rc == -1)
 	{
-		printf ("ERROR[chmod()]: %s\n", strerror(errno));
+		printf("ERROR[chmod()]: %s\n", strerror(errno));
 		return -1;
 	}
 
@@ -376,7 +376,7 @@ int do_stdinput()
 	c = getchar();
 	if (c == EOF)
 	{
-		printf ("\nERROR: stdin is close\n");
+		printf("\nERROR: stdin is close\n");
 		return -1;
 	}
 
@@ -390,7 +390,7 @@ int do_stdinput()
 	char *p = (char*)p_original;
 
 
-	for(;;)
+	for (;;)
 	{
 		if (offset >= size)
 		{
@@ -398,7 +398,7 @@ int do_stdinput()
 			p_original = realloc(p_original, size);
 			if (p_original == NULL)
 			{
-				printf ("ERROR[realloc()]: %s\n", strerror(errno));
+				printf("ERROR[realloc()]: %s\n", strerror(errno));
 				return -1;
 			}
 			p = (char*)p_original + offset;
@@ -438,18 +438,18 @@ int do_stdinput()
 // view help
 void help()
 {
-	printf ("%s\t(%s)\n", PROG_FULL_NAME, PROG_URL);
-	printf ("example: %s [-kb, --] source_file\n", PROG_NAME);
-	printf ("\n");
+	printf("%s\t(%s)\n", PROG_FULL_NAME, PROG_URL);
+	printf("example: %s [-kb, --] source_file\n", PROG_NAME);
+	printf("\n");
 
-	printf ("Convert spaces to tabs in FILE(s), or standard input, to file(s)\n");
-	printf ("\n");
-	printf ("  -h, -help, --help                this message\n");
-	printf ("  -s, --flag_sync=true|false       sync write\n");
-	printf ("  -c, --flag_comment=true|false    convert head comment\n");
-	printf ("  -m, --flag_mcbug=true|false      convert mcbug\n");
-	printf ("  -kb                              kill backup file\n");
-	printf ("With no FILE, or when FILE is -, read standard input.\n");
+	printf("Convert spaces to tabs in FILE(s), or standard input, to file(s)\n");
+	printf("\n");
+	printf("  -h, -help, --help                this message\n");
+	printf("  -s, --flag_sync=true|false       sync write\n");
+	printf("  -c, --flag_comment=true|false    convert head comment\n");
+	printf("  -m, --flag_mcbug=true|false      convert mcbug\n");
+	printf("  -kb                              kill backup file\n");
+	printf("With no FILE, or when FILE is -, read standard input.\n");
 }
 //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------//
 // split string use token to std::list
@@ -459,9 +459,9 @@ size_t tokenize2list(const std::string& s, const std::string& token, std::list<s
 	size_t size = 0;
 	size_t index1 = 0;
 
-	while(index1 < s.size())
+	while (index1 < s.size())
 	{
-		size_t index2 = s.find (token, index1);
+		size_t index2 = s.find(token, index1);
 		if (index2 == size_t(-1))
 		{
 			if (exclude_tail != false) return size;
@@ -523,7 +523,7 @@ int main(int argc, char* argv[])
 	int args_size = get_args(argc, argv, args, "TABFIX");
 
 
-	for(int i=0; i < args_size; i++)
+	for (int i=0; i < args_size; i++)
 	{
 		std::string key = args.front();
 		args.pop_front();
@@ -637,7 +637,7 @@ int main(int argc, char* argv[])
 
 	if (rc == 0)
 	{
-//		if (flag_file == true) printf ("Ok.\n");
+//		if (flag_file == true) printf("Ok.\n");
 		return 0;
 	}
 
