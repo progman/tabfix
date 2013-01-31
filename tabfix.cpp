@@ -1,5 +1,5 @@
 //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------//
-// 0.0.5
+// 0.0.6
 // Alexey Potehin http://www.gnuplanet.ru/doc/cv
 //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------//
 #include <stdio.h>
@@ -369,7 +369,7 @@ int do_stdinput()
 
 	if (global::flag_debug != false)
 	{
-		printf ("read from stdin...\n");
+		printf("read from stdin...\n");
 	}
 
 
@@ -439,7 +439,7 @@ int do_stdinput()
 void help()
 {
 	printf("%s\t(%s)\n", PROG_FULL_NAME, PROG_URL);
-	printf("example: %s [-kb, --] source_file\n", PROG_NAME);
+	printf("example: %s [-kb, --] [source_file]\n", PROG_NAME);
 	printf("\n");
 
 	printf("Convert spaces to tabs in FILE(s), or standard input, to file(s)\n");
