@@ -150,29 +150,19 @@ int tabfix(FILE *fh, const char* p, size_t size)
 	return 0;
 }
 //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------//
-// convert string to boolean
+// convert string to bool
 bool str2bool(const std::string& str)
 {
 	std::string tmp = str;
+	std::transform(str.begin(), str.end(), tmp.begin(), tolower);
 
-	std::transform(tmp.begin(), tmp.end(), tmp.begin(), tolower);
-
-	if (tmp == "true")
-	{
-		return true;
-	}
-
-	if (tmp == "t")
-	{
-		return true;
-	}
-
-	if (tmp == "on")
-	{
-		return true;
-	}
-
-	if (tmp == "1")
+	if
+	(
+		(tmp == "true") ||
+		(tmp == "t")    ||
+		(tmp == "on")   ||
+		(tmp == "1")
+	)
 	{
 		return true;
 	}
