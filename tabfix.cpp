@@ -13,7 +13,8 @@
 #include <list>
 #include <unistd.h>
 #include <sys/mman.h>
-#include <algorithm>
+//#include <algorithm>
+#include "submodule/lib_cpp/lib_cpp.h"
 //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------//
 // global vars
 namespace global
@@ -150,45 +151,6 @@ int tabfix(FILE *fh, const char* p, size_t size)
 	return 0;
 }
 //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------//
-// convert string to bool
-bool str2bool(const std::string& str)
-{
-	std::string tmp = str;
-	std::transform(str.begin(), str.end(), tmp.begin(), tolower);
-
-	if
-	(
-		(tmp == "true") ||
-		(tmp == "t")    ||
-		(tmp == "on")   ||
-		(tmp == "1")
-	)
-	{
-		return true;
-	}
-
-	return false;
-}
-//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------//
-// return (concat str1 and str2) or NULL
-char* concat_str(const char* str1, const char* str2)
-{
-	size_t str1_size = strlen(str1);
-	size_t str2_size = strlen(str2);
-
-	char* str3 = (char*)malloc(str1_size + str2_size + 1);
-	if (str3 == NULL)
-	{
-		return NULL;
-	}
-
-	memcpy(str3, str1, str1_size);
-	memcpy(str3 + str1_size, str2, str2_size);
-	str3[str1_size + str2_size] = 0;
-
-	return str3;
-}
-//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------//
 // для файла имя которого переданно преобразуем пробелы в таблуляции
 int do_file(const char *filename)
 {
@@ -196,7 +158,7 @@ int do_file(const char *filename)
 
 
 // create backup filename
-	char* backup_filename = concat_str(filename, ".bak");
+	char* backup_filename = lib_cpp::concat_str(filename, ".bak");
 	if (backup_filename == NULL)
 	{
 		printf("ERROR[concat_str()]: %s\n", strerror(errno));
@@ -545,7 +507,7 @@ int main(int argc, char* argv[])
 		if ((key.size() >= tmpl.size()) && (key.substr(0, tmpl.size()) == tmpl))
 		{
 			value = key.substr(tmpl.size(), key.size() - 1);
-			global::flag_sync = str2bool(value);
+			global::flag_sync = lib_cpp::str2bool(value);
 			continue;
 		}
 
@@ -560,7 +522,7 @@ int main(int argc, char* argv[])
 		if ((key.size() >= tmpl.size()) && (key.substr(0, tmpl.size()) == tmpl))
 		{
 			value = key.substr(tmpl.size(), key.size() - 1);
-			global::flag_debug = str2bool(value);
+			global::flag_debug = lib_cpp::str2bool(value);
 			continue;
 		}
 
@@ -575,7 +537,7 @@ int main(int argc, char* argv[])
 		if ((key.size() >= tmpl.size()) && (key.substr(0, tmpl.size()) == tmpl))
 		{
 			value = key.substr(tmpl.size(), key.size() - 1);
-			global::flag_comment = str2bool(value);
+			global::flag_comment = lib_cpp::str2bool(value);
 			continue;
 		}
 
@@ -590,7 +552,7 @@ int main(int argc, char* argv[])
 		if ((key.size() >= tmpl.size()) && (key.substr(0, tmpl.size()) == tmpl))
 		{
 			value = key.substr(tmpl.size(), key.size() - 1);
-			global::flag_mcbug = str2bool(value);
+			global::flag_mcbug = lib_cpp::str2bool(value);
 			if (global::flag_mcbug == true) global::flag_comment = true;
 			continue;
 		}

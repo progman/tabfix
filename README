@@ -2,5 +2,6 @@ Convert spaces to tabs
 
 
 1) Get this : git clone git://github.com/progman/tabfix
-2) Use this : tabfix source_file
-3) Enjoy!
+2) Make this: git submodule init && git submodule update && make x64 && ./test.sh
+3) Use this : tabfix source_file
+4) Enjoy!
