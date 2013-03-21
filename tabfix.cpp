@@ -27,7 +27,7 @@ namespace global
 }
 //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------//
 // convert space to tab
-int tabfix(FILE *fh, const char* p, size_t size)
+int tabfix(FILE *fh, const char *p, size_t size)
 {
 	size_t offset = 0;
 	bool flag_head_line = true;
@@ -158,7 +158,7 @@ int do_file(const char *filename)
 
 
 // create backup filename
-	char* backup_filename = lib_cpp::concat_str(filename, ".bak");
+	char *backup_filename = lib_cpp::concat_str(filename, ".bak");
 	if (backup_filename == NULL)
 	{
 		printf("ERROR[concat_str()]: %s\n", strerror(errno));
@@ -223,7 +223,7 @@ int do_file(const char *filename)
 
 
 // convert space to tab
-	rc = tabfix(fh, (const char*)pmmap, size);
+	rc = tabfix(fh, (const char *)pmmap, size);
 	if (rc == -1)
 	{
 		fclose(fh);
@@ -339,7 +339,7 @@ int do_stdinput()
 
 
 	void *p_original = NULL;
-	char *p = (char*)p_original;
+	char *p = (char *)p_original;
 
 
 	for (;;)
@@ -353,7 +353,7 @@ int do_stdinput()
 				printf("ERROR[realloc()]: %s\n", strerror(errno));
 				return -1;
 			}
-			p = (char*)p_original + offset;
+			p = (char *)p_original + offset;
 			continue;
 		}
 
@@ -365,7 +365,7 @@ int do_stdinput()
 
 
 // convert space to tab
-	rc = tabfix(stdout, (const char*)p_original, offset);
+	rc = tabfix(stdout, (const char *)p_original, offset);
 	if (rc == -1)
 	{
 		free(p_original);
@@ -405,7 +405,7 @@ void help()
 }
 //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------//
 // split string use token to std::list
-size_t tokenize2list(const std::string& s, const std::string& token, std::list<std::string>& out, bool exclude_tail)
+size_t tokenize2list(const std::string &s, const std::string &token, std::list<std::string> &out, bool exclude_tail)
 {
 	out.clear();
 	size_t size = 0;
@@ -434,7 +434,7 @@ size_t tokenize2list(const std::string& s, const std::string& token, std::list<s
 }
 //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------//
 // get all program arguments
-int get_args(int argc, char** argv, std::list<std::string>& args, const char* name)
+int get_args(int argc, char **argv, std::list<std::string> &args, const char *name)
 {
 	size_t count = 0;
 	args.clear();
@@ -465,7 +465,7 @@ int get_args(int argc, char** argv, std::list<std::string>& args, const char* na
 }
 //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------//
 // general function
-int main(int argc, char* argv[])
+int main(int argc, char *argv[])
 {
 	int rc = 0;
 	bool flag_file = false;
