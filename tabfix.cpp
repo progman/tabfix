@@ -1,5 +1,5 @@
 //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------//
-// 0.0.7
+// 0.0.8
 // Alexey Potehin <gnuplanet@gmail.com>, http://www.gnuplanet.ru/doc/cv
 //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------//
 #include <stdio.h>
@@ -26,6 +26,33 @@ namespace global
 	bool flag_mcbug       = false;
 }
 //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------//
+// find string
+bool strfind(const char *p_data, size_t offset, size_t size, const char *p_token)
+{
+	if ((p_data == NULL) || (p_token == NULL) || (size == 0) || (offset >= size)) return false;
+
+
+	p_data += offset;
+	const char *p_data_end = p_data + size;
+
+
+	for (;;)
+	{
+		char ch = *p_token;
+		if (ch == 0) break;
+
+		if (p_data == p_data_end) return false;
+
+		if (ch != *p_data) return false;
+
+		p_data++;
+		p_token++;
+	}
+
+
+	return true;
+}
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------//
 // convert space to tab
 int tabfix(FILE *fh, const char *p, size_t size)
 {
@@ -38,11 +65,7 @@ int tabfix(FILE *fh, const char *p, size_t size)
 		if (global::flag_comment == true)
 		{
 // skip '//' in head line
-			if
-			(
-				(p[offset + 0] == '/') &&
-				((offset + 1) != size) && (p[offset + 1] == '/')
-			)
+			if (strfind(p, offset, size, "//") == true)
 			{
 				fprintf(fh, "%c", '/');
 				fprintf(fh, "%c", '/');
@@ -61,13 +84,7 @@ int tabfix(FILE *fh, const char *p, size_t size)
    //<-><-->comment
 
 // convert '<-->' to '\t' (for mcedit)
-			if
-			(
-				(p[offset + 0] == '<') &&
-				((offset + 1) != size) && (p[offset + 1] == '-') &&
-				((offset + 2) != size) && (p[offset + 2] == '-') &&
-				((offset + 3) != size) && (p[offset + 3] == '>')
-			)
+			if (strfind(p, offset, size, "<-->") == true)
 			{
 				fprintf(fh, "%c", '\t');
 				offset += 4;
@@ -75,12 +92,7 @@ int tabfix(FILE *fh, const char *p, size_t size)
 			}
 
 // convert '<->' to '\t' (for mcedit)
-			if
-			(
-				(p[offset + 0] == '<') &&
-				((offset + 1) != size) && (p[offset + 1] == '-') &&
-				((offset + 2) != size) && (p[offset + 2] == '>')
-			)
+			if (strfind(p, offset, size, "<->") == true)
 			{
 				fprintf(fh, "%c", '\t');
 				offset += 3;
@@ -88,11 +100,7 @@ int tabfix(FILE *fh, const char *p, size_t size)
 			}
 
 // convert '<>' to '\t' (for mcedit)
-			if
-			(
-				(p[offset + 0] == '<') &&
-				((offset + 1) != size) && (p[offset + 1] == '>')
-			)
+			if (strfind(p, offset, size, "<>") == true)
 			{
 				fprintf(fh, "%c", '\t');
 				offset += 2;
@@ -100,10 +108,7 @@ int tabfix(FILE *fh, const char *p, size_t size)
 			}
 
 // convert '>' to '\t' (for mcedit)
-			if
-			(
-				(p[offset + 0] == '>')
-			)
+			if (strfind(p, offset, size, ">") == true)
 			{
 				fprintf(fh, "%c", '\t');
 				offset += 1;
@@ -122,13 +127,7 @@ int tabfix(FILE *fh, const char *p, size_t size)
 		if (flag_head_line == true)
 		{
 // convert '    ' to '\t'
-			if
-			(
-				(p[offset + 0] == ' ') &&
-				((offset + 1) != size) && (p[offset + 1] == ' ') &&
-				((offset + 2) != size) && (p[offset + 2] == ' ') &&
-				((offset + 3) != size) && (p[offset + 3] == ' ')
-			)
+			if (strfind(p, offset, size, "    ") == true)
 			{
 				fprintf(fh, "%c", '\t');
 				offset += 4;
