@@ -60,7 +60,6 @@ int tabfix(FILE *fh, const char *p, size_t size)
 	bool flag_head_line = true;
 
 
-	if (size == 0) return 0;
 	while (offset < size)
 	{
 		if (global::flag_comment == true)
