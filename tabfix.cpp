@@ -61,7 +61,7 @@ int tabfix(FILE *fh, const char *p, size_t size)
 
 
 	if (size == 0) return 0;
-	while (offset != size)
+	while (offset < size)
 	{
 		if (global::flag_comment == true)
 		{
