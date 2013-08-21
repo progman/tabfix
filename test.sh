@@ -3,19 +3,33 @@
 APP='./bin/tabfix';
 #-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------#
 # run app
-function app_run()
+function run_app()
 {
+	STDIN=$(cat);
+
+
 	if [ "${FLAG_VALGRIND}" != "1" ];
 	then
-		echo -n $(${APP} ${@});
+		if [ "${STDIN}" != "" ];
+		then
+			STDOUT=$(echo "${STDIN}" | ${APP} "${@}");
+		else
+			STDOUT=$(${APP} "${@}");
+		fi
 	else
 		VAL="valgrind --tool=memcheck --leak-check=yes --leak-check=full --show-reachable=yes --log-file=valgrind.log";
 
-		echo -n $(${VAL} ${APP} ${@});
+		STDOUT=$(echo "${STDIN}" | ${VAL} ${APP} "${@}");
 
 		echo '--------------------------' >> valgrind.all.log;
 		cat valgrind.log >> valgrind.all.log;
 		rm -rf valgrind.log;
+	fi
+
+
+	if [ "${STDOUT}" != "" ];
+	then
+		echo -n "${STDOUT}";
 	fi
 }
 #-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------#
@@ -30,7 +44,7 @@ function test1()
 	echo -en "${MSG1}" > "${TMP1}";
 	echo -en "${MSG1}" > "${TMP2}";
 	echo -en "${MSG2}" > "${TMP3}";
-	app_run -c -m -kb -s "${TMP2}";
+	run_app -c -m -kb -s "${TMP2}" < /dev/null;
 
 
 	HASH1="$(md5sum ${TMP2} | awk '{print $1}')";
