@@ -79,16 +79,20 @@ function test1()
 # check depends
 function check_prog()
 {
+	local FLAG_OK=1;
 	for i in ${CHECK_PROG_LIST};
 	do
 		if [ "$(which ${i})" == "" ];
 		then
-			echo "ERROR: you must install \"${i}\"...";
+			echo "FATAL: you must install \"${i}\"...";
 			echo;
 			echo;
-			exit 1;
+			FLAG_OK=0;
+			break;
 		fi
 	done
+
+	return ${FLAG_OK};
 }
 #-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------#
 if [ ! -e "${APP}" ];
@@ -98,8 +102,11 @@ then
 fi
 
 
-CHECK_PROG_LIST='awk cat echo md5sum mktemp rm';
-check_prog;
+check_prog "awk cat echo md5sum mktemp rm";
+if [ "${?}" == "0" ];
+then
+	exit 1;
+fi
 
 
 MSG1="hello\nworld!";
