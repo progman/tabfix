@@ -177,7 +177,7 @@ int do_file(const char *filename)
 	if (rc == -1)
 	{
 		free(backup_filename);
-		printf("ERROR[rename()]: %s \"%s\"\n", strerror(errno), backup_filename);
+		printf("ERROR[rename()]: %s \"%s\"\n", strerror(errno), filename);
 		return -1;
 	}
 
