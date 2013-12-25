@@ -3,7 +3,7 @@
 # Alexey Potehin <gnuplanet@gmail.com>, http://www.gnuplanet.ru/doc/cv
 #-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------#
 PROG_NAME       := tabfix
-PROG_VERSION    := 0.0.8
+PROG_VERSION    := 0.0.9
 PROG_URL        := https://github.com/progman/tabfix.git
 
 OUT_DIR         := bin

@@ -1,5 +1,5 @@
 //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------//
-// 0.0.8
+// 0.0.9
 // Alexey Potehin <gnuplanet@gmail.com>, http://www.gnuplanet.ru/doc/cv
 //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------//
 #include <stdio.h>
@@ -13,7 +13,6 @@
 #include <list>
 #include <unistd.h>
 #include <sys/mman.h>
-//#include <algorithm>
 #include "submodule/lib_cpp/lib_cpp.h"
 //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------//
 // global vars
@@ -24,6 +23,7 @@ namespace global
 	bool flag_debug       = false;
 	bool flag_comment     = false;
 	bool flag_mcbug       = false;
+	bool flag_unix        = false;
 }
 //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------//
 // find string
@@ -118,7 +118,7 @@ int tabfix(FILE *fh, const char *p, size_t size)
 
 
 
-		if ((p[offset + 0] != ' ') && (p[offset + 0] != '\t'))
+		if ((p[offset] != ' ') && (p[offset] != '\t'))
 		{
 			flag_head_line = false;
 		}
@@ -136,13 +136,20 @@ int tabfix(FILE *fh, const char *p, size_t size)
 		}
 
 
-		if (p[offset + 0] == '\n')
+		if (p[offset] == '\n')
 		{
 			flag_head_line = true;
 		}
 
 
-		fprintf(fh, "%c", p[offset + 0]);
+		if ((p[offset] == '\r') && (global::flag_unix == true))
+		{
+			offset++;
+			continue;
+		}
+
+
+		fprintf(fh, "%c", p[offset]);
 		offset++;
 	}
 
@@ -170,7 +177,7 @@ int do_file(const char *filename)
 	if (rc == -1)
 	{
 		free(backup_filename);
-		printf("ERROR[rename()]: %s\n", strerror(errno));
+		printf("ERROR[rename()]: %s \"%s\"\n", strerror(errno), backup_filename);
 		return -1;
 	}
 
@@ -403,6 +410,7 @@ void help()
 	printf("  -c, --flag_comment=true|false    convert head comment\n");
 	printf("  -m, --flag_mcbug=true|false      convert mcbug\n");
 	printf("  -kb                              kill backup file\n");
+	printf("  -u, --flag_unix=true|false       skip 0x0D byte\n");
 	printf("With no FILE, or when FILE is --, read standard input.\n");
 }
 //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------//
@@ -563,6 +571,21 @@ int main(int argc, char *argv[])
 		{
 			global::flag_comment = true;
 			global::flag_mcbug   = true;
+			continue;
+		}
+
+
+		tmpl = "--flag_unix=";
+		if ((key.size() >= tmpl.size()) && (key.substr(0, tmpl.size()) == tmpl))
+		{
+			value = key.substr(tmpl.size(), key.size() - 1);
+			global::flag_unix = lib_cpp::str2bool(value);
+			continue;
+		}
+
+		if (key == "-u")
+		{
+			global::flag_unix = true;
 			continue;
 		}
 
