@@ -13,7 +13,7 @@
 #include <list>
 #include <unistd.h>
 #include <sys/mman.h>
-#include "submodule/lib_cpp/lib_cpp.h"
+#include "submodule/lib_cpp/lib_cpp.hpp"
 //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------//
 // global vars
 namespace global
