@@ -517,7 +517,7 @@ int main(int argc, char *argv[])
 		if ((key.size() >= tmpl.size()) && (key.substr(0, tmpl.size()) == tmpl))
 		{
 			value = key.substr(tmpl.size(), key.size() - 1);
-			global::flag_sync = lib_cpp::str2bool(value);
+			lib_cpp::str2bool(global::flag_sync, false, value);
 			continue;
 		}
 
@@ -532,7 +532,7 @@ int main(int argc, char *argv[])
 		if ((key.size() >= tmpl.size()) && (key.substr(0, tmpl.size()) == tmpl))
 		{
 			value = key.substr(tmpl.size(), key.size() - 1);
-			global::flag_debug = lib_cpp::str2bool(value);
+			lib_cpp::str2bool(global::flag_debug, false, value);
 			continue;
 		}
 
@@ -547,7 +547,7 @@ int main(int argc, char *argv[])
 		if ((key.size() >= tmpl.size()) && (key.substr(0, tmpl.size()) == tmpl))
 		{
 			value = key.substr(tmpl.size(), key.size() - 1);
-			global::flag_comment = lib_cpp::str2bool(value);
+			lib_cpp::str2bool(global::flag_comment, false, value);
 			continue;
 		}
 
@@ -562,7 +562,7 @@ int main(int argc, char *argv[])
 		if ((key.size() >= tmpl.size()) && (key.substr(0, tmpl.size()) == tmpl))
 		{
 			value = key.substr(tmpl.size(), key.size() - 1);
-			global::flag_mcbug = lib_cpp::str2bool(value);
+			lib_cpp::str2bool(global::flag_mcbug, false, value);
 			if (global::flag_mcbug == true) global::flag_comment = true;
 			continue;
 		}
@@ -579,7 +579,7 @@ int main(int argc, char *argv[])
 		if ((key.size() >= tmpl.size()) && (key.substr(0, tmpl.size()) == tmpl))
 		{
 			value = key.substr(tmpl.size(), key.size() - 1);
-			global::flag_unix = lib_cpp::str2bool(value);
+			lib_cpp::str2bool(global::flag_unix, false, value);
 			continue;
 		}
 
