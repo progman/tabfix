@@ -13,7 +13,7 @@
 #include <list>
 #include <unistd.h>
 #include <sys/mman.h>
-#include "submodule/lib_cpp/lib_cpp.hpp"
+#include "submodule/libcore.cpp/libcore.hpp"
 //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------//
 // global vars
 namespace global
@@ -164,7 +164,7 @@ int do_file(const char *filename)
 
 
 // create backup filename
-	char *backup_filename = lib_cpp::concat_str(filename, ".bak");
+	char *backup_filename = libcore::concat_str(filename, ".bak");
 	if (backup_filename == NULL)
 	{
 		printf("ERROR[concat_str()]: %s\n", strerror(errno));
@@ -517,7 +517,7 @@ int main(int argc, char *argv[])
 		if ((key.size() >= tmpl.size()) && (key.substr(0, tmpl.size()) == tmpl))
 		{
 			value = key.substr(tmpl.size(), key.size() - 1);
-			lib_cpp::str2bool(global::flag_sync, false, value);
+			libcore::str2bool(global::flag_sync, false, value);
 			continue;
 		}
 
@@ -532,7 +532,7 @@ int main(int argc, char *argv[])
 		if ((key.size() >= tmpl.size()) && (key.substr(0, tmpl.size()) == tmpl))
 		{
 			value = key.substr(tmpl.size(), key.size() - 1);
-			lib_cpp::str2bool(global::flag_debug, false, value);
+			libcore::str2bool(global::flag_debug, false, value);
 			continue;
 		}
 
@@ -547,7 +547,7 @@ int main(int argc, char *argv[])
 		if ((key.size() >= tmpl.size()) && (key.substr(0, tmpl.size()) == tmpl))
 		{
 			value = key.substr(tmpl.size(), key.size() - 1);
-			lib_cpp::str2bool(global::flag_comment, false, value);
+			libcore::str2bool(global::flag_comment, false, value);
 			continue;
 		}
 
@@ -562,7 +562,7 @@ int main(int argc, char *argv[])
 		if ((key.size() >= tmpl.size()) && (key.substr(0, tmpl.size()) == tmpl))
 		{
 			value = key.substr(tmpl.size(), key.size() - 1);
-			lib_cpp::str2bool(global::flag_mcbug, false, value);
+			libcore::str2bool(global::flag_mcbug, false, value);
 			if (global::flag_mcbug == true) global::flag_comment = true;
 			continue;
 		}
@@ -579,7 +579,7 @@ int main(int argc, char *argv[])
 		if ((key.size() >= tmpl.size()) && (key.substr(0, tmpl.size()) == tmpl))
 		{
 			value = key.substr(tmpl.size(), key.size() - 1);
-			lib_cpp::str2bool(global::flag_unix, false, value);
+			libcore::str2bool(global::flag_unix, false, value);
 			continue;
 		}
 

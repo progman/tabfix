@@ -8,8 +8,8 @@ PROG_URL        := https://github.com/progman/tabfix.git
 
 OUT_DIR         := bin
 C_LIST          :=
-CPP_LIST        := tabfix.cpp submodule/lib_cpp/lib_cpp.cpp
-HEADER_LIST     := submodule/lib_cpp/lib_cpp.hpp
+CPP_LIST        := tabfix.cpp submodule/libcore.cpp/libcore.cpp
+HEADER_LIST     := submodule/libcore.cpp/libcore.hpp
 
 CFLAGS          :=
 CPPFLAGS        :=
