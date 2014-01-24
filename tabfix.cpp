@@ -399,7 +399,7 @@ int do_stdinput()
 // view help
 void help()
 {
-	printf("%s\t(%s)\n", PROG_FULL_NAME, PROG_URL);
+	printf("%s    %s\n", PROG_FULL_NAME, PROG_URL);
 	printf("example: %s [-kb, --] [source_file]\n", PROG_NAME);
 	printf("\n");
 
