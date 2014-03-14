@@ -161,6 +161,58 @@ int tabfix(FILE *fh, const char *p, size_t size)
 int do_file(const char *filename)
 {
 	int rc; // error code
+	size_t size; // file size
+	char tmp[256]; // buffer for readlink
+
+
+// get file size
+	struct stat my_stat;
+	rc = lstat(filename, &my_stat);
+	if (rc == -1)
+	{
+		printf("ERROR[stat()]: %s\n", strerror(errno));
+		return -1;
+	}
+	size = my_stat.st_size;
+
+
+// read link
+	if (S_ISLNK(my_stat.st_mode) != false)
+	{
+		rc = readlink(filename, tmp, sizeof(tmp));
+		if (rc == -1)
+		{
+			printf("ERROR[readlink()]: %s\n", strerror(errno));
+			return -1;
+		}
+
+		if (rc == sizeof(tmp))
+		{
+			printf("ERROR[readlink()]: buffer too small\n");
+			return -1;
+		}
+
+
+		tmp[rc] = 0;
+		filename = tmp;
+
+
+		rc = stat(filename, &my_stat);
+		if (rc == -1)
+		{
+			printf("ERROR[stat()]: %s\n", strerror(errno));
+			return -1;
+		}
+		size = my_stat.st_size;
+	}
+
+
+// check file type
+	if (S_ISREG(my_stat.st_mode) == false)
+	{
+		printf("ERROR[stat()]: this is not regular file\n");
+		return -1;
+	}
 
 
 // create backup filename
@@ -191,19 +243,6 @@ int do_file(const char *filename)
 		return -1;
 	}
 	int fd = rc;
-
-
-// get file size
-	struct stat my_stat;
-	rc = fstat(fd, &my_stat);
-	if (rc == -1)
-	{
-		close(fd);
-		free(backup_filename);
-		printf("ERROR[fstat()]: %s\n", strerror(errno));
-		return -1;
-	}
-	size_t size = my_stat.st_size;
 
 
 // map file to memory
