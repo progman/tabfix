@@ -9,7 +9,7 @@ PROG_TYPE           := exe
 
 OUT_DIR             := bin
 C_LIST              :=
-CPP_LIST            := tabfix.cpp submodule/libcore.cpp/libcore.cpp
+CPP_LIST            := submodule/libcore.cpp/libcore.cpp tabfix.cpp
 HEADER_LIST         := submodule/libcore.cpp/libcore.hpp
 
 CFLAGS              :=
