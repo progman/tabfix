@@ -77,8 +77,8 @@ function test1()
 	run_app -c -m -kb -s "${TMP2}" < /dev/null;
 
 
-	local HASH1="$(md5sum ${TMP2} | awk '{print $1}')";
-	local HASH2="$(md5sum ${TMP3} | awk '{print $1}')";
+	local HASH1="$(md5sum ${TMP2} | awk '{print $1}' | { local a; read a; echo "${a}";})";
+	local HASH2="$(md5sum ${TMP3} | awk '{print $1}' | { local a; read a; echo "${a}";})";
 
 
 	if [ "${FLAG_DEBUG}" != "" ];
@@ -92,7 +92,7 @@ function test1()
 
 	if [ "${HASH1}" != "${HASH2}" ];
 	then
-		echo "ERROR: result different...";
+		echo "ERROR: result is different...";
 
 		echo -n "data1(${TMP1}): "; cat "${TMP1}"; echo;
 		echo -n "data2(${TMP2}): "; cat "${TMP2}"; echo;
